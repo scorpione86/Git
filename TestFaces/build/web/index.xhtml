@@ -1,0 +1,169 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      
+
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <h1>
+            <h:outputText value="#{newBean.message}"/>
+        </h1>
+        <h:form>
+            Name: <h:inputText value="#{newBean.name}"/>
+            <h:commandButton action="#{newBean.sayHello()}" value="Hello"/>                 
+        </h:form>
+
+ <h:form>
+    <p:growl id="msgs" showDetail="true" />
+ 
+    <p:panel header="Select a Location" style="margin-bottom:10px;">
+        <h:panelGrid columns="2" cellpadding="5">
+            <p:outputLabel for="country" value="Country: " />
+            <p:selectOneMenu id="country" value="#{dropDownView.country}" style="width:150px">
+                <p:ajax listener="#{dropDownView.onCountryChange}" update="city" />
+                <f:selectItem itemLabel="Select Country" itemValue="" noSelectionOption="true" />
+                <f:selectItems value="#{dropDownView.countries}" />
+            </p:selectOneMenu>
+ 
+            <p:outputLabel for="city" value="City: " />
+            <p:selectOneMenu id="city" value="#{dropDownView.city}" style="width:150px">
+                <f:selectItem itemLabel="Select City" itemValue="" noSelectionOption="true" />
+                <f:selectItems value="#{dropDownView.cities}" />
+            </p:selectOneMenu>
+        </h:panelGrid>
+ 
+        <p:separator />
+ 
+        <p:commandButton value="Submit"  update="msgs" actionListener="#{dropDownView.displayLocation}" icon="ui-icon-check" />
+    </p:panel>
+</h:form>
+        
+<h:form>
+    <h:panelGrid columns="3">
+        <h:outputText value="Keyup: " />
+        <p:inputText id="counter" value="#{listenerView.text}">
+            <p:ajax event="keyup" update="out" listener="#{listenerView.handleKeyEvent}" />
+        </p:inputText>
+        <h:outputText id="out" value="#{listenerView.text}" />
+    </h:panelGrid>
+</h:form>
+        
+<h:form id="form">
+    <p:growl id="msgs" showDetail="true"/>
+    <p:dataTable var="car" value="#{dtSortView.cars1}"  
+                 editable="true" editMode="cell" 
+                 emptyMessage="No cars found with given criteria" filteredValue="#{dtSortView.filteredCars}"
+                 widgetVar="cellCars" 
+                 resizableColumns="true" 
+                 draggableRows="true" 
+                 draggableColumns="true" 
+                 style="margin-bottom:40px">
+        
+        <f:facet name="header">
+            <p:outputPanel>
+                <h:outputText value="Search all fields:" />
+                <p:inputText id="globalFilter" 
+                             onkeyup="PF('cellCars').filter()" 
+                             style="width:150px" 
+                             placeholder="Enter keyword"/>
+            </p:outputPanel>
+        </f:facet>
+        
+<!--        <f:facet name="header">
+            Single Column Sort
+        </f:facet>-->
+        
+       <p:ajax event="rowEdit" listener="#{dtSortView.onRowEdit}" update=":form:msgs" />
+       
+        <p:column headerText="Id" 
+                  filterBy="#{car.id}"
+                  filterMatchMode="contains"
+                  sortBy="#{car.id}">
+            <h:outputText value="#{car.id}" />
+        </p:column>
+ 
+        <p:column headerText="Year" 
+                  filterBy="#{car.year}"                 
+                  filterMatchMode="in"
+                  sortBy="#{car.year}">
+            <f:facet name="filter">
+                <p:selectCheckboxMenu label="Year" onchange="PF('cellCars').filter()" panelStyle="width:250px" scrollHeight="150">
+                    <f:selectItems value="#{dtSortView.cars1}" />
+                </p:selectCheckboxMenu>
+            </f:facet>
+               <p:cellEditor>
+                  <f:facet name="output"><h:outputText value="#{car.year}" /></f:facet>
+                  <f:facet name="input"><p:inputText id="modelInput2" value="#{car.year}" style="width:96%"/></f:facet>
+              </p:cellEditor>
+        </p:column>
+ 
+        <p:column 
+                  filterBy="#{car.brand}"
+                  filterMatchMode="in"
+                  sortBy="#{car.brand}">
+            <f:facet name="filter">
+                <p:selectCheckboxMenu label="Brand" onchange="PF('cellCars').filter()" panelStyle="width:250px" scrollHeight="150">
+                    <f:selectItems value="#{dtSortView.brands}" />
+                </p:selectCheckboxMenu>
+            </f:facet>
+               <p:cellEditor>
+                  <f:facet name="output"><h:outputText value="#{car.brand}" /></f:facet>
+                  <f:facet name="input"><p:inputText id="modelInput3" value="#{car.brand}" style="width:96%"/></f:facet>
+              </p:cellEditor>
+        </p:column>
+ 
+        <p:column 
+                  filterBy="#{car.color}"                
+                  filterMatchMode="in"
+                  sortBy="#{car.color}">
+            <f:facet name="filter">
+                <p:selectCheckboxMenu label="Color" onchange="PF('cellCars').filter()" panelStyle="width:250px" scrollHeight="150">
+                    <f:selectItems value="#{dtSortView.colors}" />
+                </p:selectCheckboxMenu>
+            </f:facet>
+               <p:cellEditor>
+                  <f:facet name="output"><h:outputText value="#{car.color}" /></f:facet>
+                  <f:facet name="input"><p:inputText id="modelInput4" value="#{car.color}" style="width:96%"/></f:facet>
+              </p:cellEditor>
+        </p:column>
+        
+         
+        <p:column headerText="Price" 
+                  filterBy="#{car.price}"                
+                  filterMatchMode="contains"
+                  sortBy="#{car.price}">
+               <p:cellEditor>
+                  <f:facet name="output"><h:outputText value="#{car.price}" /></f:facet>
+                  <f:facet name="input"><p:inputText id="modelInput5" value="#{car.price}" style="width:96%"/></f:facet>
+              </p:cellEditor>
+        </p:column>
+        
+        <p:column headerText="Sold" 
+                  filterBy="#{car.sold}"                
+                  filterMatchMode="equals"
+                  sortBy="#{car.sold}">
+                <f:facet name="filter">
+                <p:selectOneButton onchange="PF('cellCars').filter()">
+                    <f:converter converterId="javax.faces.Boolean" />
+                    <f:selectItem itemLabel="All" itemValue="" />
+                    <f:selectItem itemLabel="true" itemValue="true" />
+                    <f:selectItem itemLabel="false" itemValue="false" />
+                </p:selectOneButton>
+            </f:facet>
+               <p:cellEditor>
+                  <f:facet name="output"><h:outputText value="#{car.sold}" /></f:facet>
+                  <f:facet name="input"><p:inputText id="modelInput6" value="#{car.sold}" style="width:96%"/></f:facet>
+              </p:cellEditor>
+        </p:column>
+    </p:dataTable>
+ 
+</h:form>
+     
+    </h:body>
+ 
+</html>
